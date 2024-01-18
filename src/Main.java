@@ -118,10 +118,16 @@ public class Main {
             String contact_num = scanner.next();
 
 
-            String query="insert into reservation(name,room_num,contact_num) values ('" + name + "', " + room_num + ", '" + contact_num + "')";
+//            String query="insert into reservation(name,room_num,contact_num) values ('" + name + "', " + room_num + ", '" + contact_num + "')";
+
+            String query="insert into reservation(name,room_num,contact_num) values (?,?,?)";
             try {
                 Statement st = conn.createStatement();
-                int roweffected = st.executeUpdate(query);
+                PreparedStatement pst=conn.prepareStatement(query);
+                pst.setString(1,name);
+                pst.setInt(2,room_num);
+                pst.setString(3,contact_num);
+                int roweffected = pst.executeUpdate();
                 if (roweffected > 0) {
                     System.out.println("Data inserted successfully");
                 } else {
@@ -148,8 +154,9 @@ public class Main {
 
 
         try{
-            Statement st=conn.createStatement();
-            ResultSet rs=st.executeQuery(sql);
+//            Statement st=conn.createStatement();
+            PreparedStatement pst=conn.prepareStatement(sql);
+            ResultSet rs=pst.executeQuery(sql);
 
             System.out.println("+----------------+-----------------+---------------+----------------------+-------------------------+");
             System.out.println("| Reservation ID | GuestName           | Room Number   | Contact Number      | Reservation Date        |");
@@ -182,13 +189,17 @@ public class Main {
         int  id=scanner.nextInt();
 
 
-        String sql = "SELECT * FROM reservation " +
-                   "WHERE id = " + id
-                   ;
+//        String sql = "SELECT * FROM reservation " +
+//                   "WHERE id = " + id
+//                   ;
+        String sql="select * from reservation WHERE id=?";
+
 
         try {
-            Statement st=conn.createStatement();
-            ResultSet result=st.executeQuery(sql);
+//            Statement st=conn.createStatement();
+            PreparedStatement pst=conn.prepareStatement(sql);
+            pst.setInt(1,id);
+            ResultSet result=pst.executeQuery();
 
             System.out.println("+----------------+-----------------+---------------+----------------------+-------------------------+");
             System.out.println("| Reservation ID | GuestName           | Room Number   | Contact Number      | Reservation Date        |");
@@ -201,7 +212,7 @@ public class Main {
                     String contact_num=result.getString("contact_num");
                     String  reserve_date=result.getString("reservation_date");
                    System.out.printf("| %-14d | %-15s | %-13d | %-20s | %-19s   |\n",
-                           id, name, room_num, contact_num, reserve_date);
+                           user_id, name, room_num, contact_num, reserve_date);
                    System.out.println("+----------------+-----------------+---------------+----------------------+-------------------------+");
 
 
@@ -234,14 +245,22 @@ public class Main {
             System.out.print("Enter new contact number: ");
             String newContactNumber = scanner.next();
 
-            String sql = "UPDATE reservation SET name = '" + newGuestName + "', " +
-                    "room_num = " + newRoomNumber + ", " +
-                    "contact_num = '" + newContactNumber + "' " +
-                    "WHERE id = " + reservation_id;
+//            String sql = "UPDATE reservation SET name = '" + newGuestName + "', " +
+//                    "room_num = " + newRoomNumber + ", " +
+//                    "contact_num = '" + newContactNumber + "' " +
+//                    "WHERE id = " + reservation_id;
 
-            try{
-                Statement st= conn.createStatement();
-                int roweffeced=st.executeUpdate(sql);
+                String sql = "UPDATE reservation SET name = ?, room_num = ?, contact_num = ? WHERE id = ?";
+
+
+                try{
+//                Statement st= conn.createStatement();
+                PreparedStatement pst=conn.prepareStatement(sql);
+                pst.setString(1,newGuestName);
+                pst.setInt(2,newRoomNumber);
+                pst.setString(3,newContactNumber);
+                pst.setInt(4,reservation_id);
+                int roweffeced=pst.executeUpdate();
                 if(roweffeced>0){
                     System.out.println("update successfully.....");
                 }
@@ -275,10 +294,13 @@ public class Main {
         else{
             try
             {
-                String query="Delete from reservation  where id="+ guest_id;
+                String query="Delete from reservation  where id=?";
 
-                Statement st=conn.createStatement();
-                int effectedrow=st.executeUpdate(query);
+//                Statement st=conn.createStatement(query);
+                PreparedStatement pst=conn.prepareStatement(query);
+                pst.setInt(1,guest_id);
+
+                int effectedrow=pst.executeUpdate();
                 if(effectedrow>0){
                     System.out.println("deleted successfully.......");
                 }
@@ -295,9 +317,11 @@ public class Main {
 
     private static boolean checkexist(Connection conn,int reservation_id){
         try{
-            String query ="select id from reservation where id= " +  reservation_id;
-            Statement st=conn.createStatement();
-            ResultSet result =st.executeQuery(query);
+            String query ="select id from reservation where id= ?";
+//            Statement st=conn.createStatement();
+            PreparedStatement pst= conn.prepareStatement(query);
+            pst.setInt(1,reservation_id);
+            ResultSet result =pst.executeQuery();
             return result.next();
 
         }

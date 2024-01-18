@@ -53,8 +53,9 @@ public class Main {
                         DeleteGuest(conn,scanner);
                         break;
                     case 0:
-                        System.out.println("quit program");
-                        System.exit(1);
+                        exit();
+                        scanner.close();
+                       return;
                     default:
                         System.out.println("Invalid choice .Try again");
                 }
@@ -280,5 +281,18 @@ public class Main {
             System.out.println(e.getMessage());
             return false;
         }
+    }
+
+
+       public static void exit() throws InterruptedException {
+        System.out.print("Exiting System");
+       int i = 5;
+        while(i!=0){
+           System.out.print(".");
+          Thread.sleep(1000);
+            i--;
+        }
+        System.out.println();
+       System.out.println("ThankYou For Using Hotel Reservation System!!!");
     }
 }

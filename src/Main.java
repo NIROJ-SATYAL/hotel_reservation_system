@@ -2,11 +2,37 @@ import javax.swing.plaf.nimbus.State;
 import java.security.spec.ECField;
 import java.sql.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-    private static final  String db_url="jdbc:mysql://localhost:3306/hotel_db";
-    private static final String  db_username="root";
-    private static final String  db_password="jorin!@#1";
+//    private static final  String db_url="jdbc:mysql://localhost:3306/hotel_db";
+//    private static final String  db_username="root";
+//    private static final String  db_password="jorin!@#1";
+
+
+
+    private static String db_url;
+    private static String db_username;
+    private static String db_password;
+
+    static {
+        loadDatabaseProperties();
+    }
+
+    private static void loadDatabaseProperties() {
+        try (InputStream input = Main.class.getClassLoader().getResourceAsStream("env.properties")) {
+            Properties properties = new Properties();
+            if (input != null) {
+                properties.load(input);
+                db_url = properties.getProperty("db_url");
+                db_username = properties.getProperty("db_username");
+                db_password = properties.getProperty("db_password");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) throws ClassNotFoundException ,SQLException {
 
         try{

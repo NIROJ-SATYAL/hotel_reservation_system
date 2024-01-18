@@ -1,3 +1,4 @@
+import java.security.spec.ECField;
 import java.sql.*;
 import java.util.*;
 
@@ -45,7 +46,7 @@ public class Main {
                         UserDetails(conn,scanner);
                         break;
                     case 4:
-                        System.out.println("update reservation");
+                        updateUser(conn ,scanner);
                         break;
                     case 5:
                         System.out.println("Delete reservation");
@@ -123,7 +124,7 @@ public class Main {
         try{
             Statement st=conn.createStatement();
             ResultSet rs=st.executeQuery(sql);
-            System.out.println("Current Reservations:");
+
             System.out.println("+----------------+-----------------+---------------+----------------------+-------------------------+");
             System.out.println("| Reservation ID | GuestName           | Room Number   | Contact Number      | Reservation Date        |");
             System.out.println("+----------------+-----------------+---------------+----------------------+-------------------------+");
@@ -188,5 +189,66 @@ public class Main {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    public static void updateUser (Connection conn ,Scanner scanner){
+        System.out.println("**********update user***********");
+        System.out.println("enter the id of the guest");
+            int reservation_id=scanner.nextInt();
+
+            if(!checkexist(conn,reservation_id)){
+                System.out.println("guest doesnt exist.......");
+            }
+            else {
+                System.out.print("Enter new guest name: ");
+            String newGuestName = scanner.next();
+            scanner.nextLine();
+            System.out.print("Enter new room number: ");
+            int newRoomNumber = scanner.nextInt();
+            System.out.print("Enter new contact number: ");
+            String newContactNumber = scanner.next();
+
+            String sql = "UPDATE reservation SET name = '" + newGuestName + "', " +
+                    "room_num = " + newRoomNumber + ", " +
+                    "contact_num = '" + newContactNumber + "' " +
+                    "WHERE id = " + reservation_id;
+
+            try{
+                Statement st= conn.createStatement();
+                int roweffeced=st.executeUpdate(sql);
+                if(roweffeced>0){
+                    System.out.println("update successfully.....");
+                }
+                else {
+                    System.out.println("error to update guest....");
+                }
+
+            }
+            catch(Exception e){
+                System.out.println(e.getMessage());
+            }
+
+
+
+            }
+
+
+
+
+    }
+
+
+    private static boolean checkexist(Connection conn,int reservation_id){
+        try{
+            String query ="select id from reservation where id= " +  reservation_id;
+            Statement st=conn.createStatement();
+            ResultSet result =st.executeQuery(query);
+            return result.next();
+
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 }

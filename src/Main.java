@@ -5,9 +5,7 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-//    private static final  String db_url="jdbc:mysql://localhost:3306/hotel_db";
-//    private static final String  db_username="root";
-//    private static final String  db_password="jorin!@#1";
+
 
 
 

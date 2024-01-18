@@ -1,3 +1,4 @@
+import javax.swing.plaf.nimbus.State;
 import java.security.spec.ECField;
 import java.sql.*;
 import java.util.*;
@@ -49,7 +50,7 @@ public class Main {
                         updateUser(conn ,scanner);
                         break;
                     case 5:
-                        System.out.println("Delete reservation");
+                        DeleteGuest(conn,scanner);
                         break;
                     case 0:
                         System.out.println("quit program");
@@ -235,6 +236,35 @@ public class Main {
 
 
 
+    }
+
+    public static void DeleteGuest(Connection conn, Scanner scanner){
+        System.out.println("******************Delete User**************");
+
+        System.out.println("enter the guest id:");
+        int guest_id=scanner.nextInt();
+
+        if(!checkexist(conn,guest_id)){
+            System.out.println("guest doesnt exist");
+        }
+        else{
+            try
+            {
+                String query="Delete from reservation  where id="+ guest_id;
+
+                Statement st=conn.createStatement();
+                int effectedrow=st.executeUpdate(query);
+                if(effectedrow>0){
+                    System.out.println("deleted successfully.......");
+                }
+                else {
+                    System.out.println("failed to delete guest.......");
+                }
+            }
+            catch(Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
 

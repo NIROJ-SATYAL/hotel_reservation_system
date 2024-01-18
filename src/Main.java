@@ -27,7 +27,7 @@ public class Main {
 
                 System.out.println("1. Reserve a room");
                 System.out.println("2. View Reservations");
-                System.out.println("3. Get Room Number");
+                System.out.println("3. User Details");
                 System.out.println("4. Update Reservations");
                 System.out.println("5. Delete Reservations");
                 System.out.println("0. Exit");
@@ -42,7 +42,7 @@ public class Main {
                         viewReservation(conn);
                         break;
                     case 3:
-                        RoomNum(conn,scanner)
+                        UserDetails(conn,scanner);
                         break;
                     case 4:
                         System.out.println("update reservation");
@@ -148,7 +148,45 @@ public class Main {
             System.out.println(e.getMessage());
         }
     }
-    public static  void RoomNum(Connection conn,Scanner scanner){
+    public static  void UserDetails(Connection conn,Scanner scanner){
+        System.out.println( "************User Details**********");
+
+        System.out.println("enter the user id:");
+        int  id=scanner.nextInt();
+
+
+        String sql = "SELECT * FROM reservation " +
+                   "WHERE id = " + id
+                   ;
+
+        try {
+            Statement st=conn.createStatement();
+            ResultSet result=st.executeQuery(sql);
+
+            System.out.println("+----------------+-----------------+---------------+----------------------+-------------------------+");
+            System.out.println("| Reservation ID | GuestName           | Room Number   | Contact Number      | Reservation Date        |");
+            System.out.println("+----------------+-----------------+---------------+----------------------+-------------------------+");
+
+               if (result.next()) {
+                   int user_id =result.getInt("id");
+                    String name = result.getString("name");
+                    int room_num=result.getInt("room_num");
+                    String contact_num=result.getString("contact_num");
+                    String  reserve_date=result.getString("reservation_date");
+                   System.out.printf("| %-14d | %-15s | %-13d | %-20s | %-19s   |\n",
+                           id, name, room_num, contact_num, reserve_date);
+                   System.out.println("+----------------+-----------------+---------------+----------------------+-------------------------+");
+
+
+                } else {
+                    System.out.println("Reservation not found for the given contact number and guest name.");
+                }
+
+
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
 
     }
 }
